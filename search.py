@@ -1,8 +1,14 @@
 from sqlalchemy import create_engine, Column, Integer, String,select
 from sqlalchemy.orm import Session, declarative_base
+
 from typing import Optional
 import config
 
+import uvicorn
+
+
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 database_Url = f"postgresql://{config.user}:{config.password}@{config.host}:5432/{config.database}"
 engine = create_engine(database_Url)
@@ -19,6 +25,9 @@ class Deadth_stat(Base):
     cause = Column(String)
     deaths = Column(Integer)
 
+app = FastAPI()
+
+@app.get("/search_mortality_data")
 def search_mortality_data(
     country: Optional[str] = None,
     year: Optional[int] = None,
@@ -48,4 +57,8 @@ def search_mortality_data(
             "cause": obj.cause,
             "deaths": obj.deaths
         })
-    return data
+    return JSONResponse(content=data)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+    
