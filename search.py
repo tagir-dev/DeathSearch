@@ -1,13 +1,11 @@
 from sqlalchemy import create_engine, Column, Integer, String,select
 from sqlalchemy.orm import Session, declarative_base
-
 from typing import Optional
-import config
 
+import config
 import uvicorn
 
-
-from fastapi import FastAPI
+from fastapi import FastAPI,status
 from fastapi.responses import JSONResponse
 
 database_Url = f"postgresql://{config.user}:{config.password}@{config.host}:5432/{config.database}"
@@ -57,7 +55,7 @@ def search_mortality_data(
             "cause": obj.cause,
             "deaths": obj.deaths
         })
-    return JSONResponse(content=data)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=data)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
