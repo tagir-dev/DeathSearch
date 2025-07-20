@@ -15,7 +15,7 @@ session = Session(engine, future=True)
 
 Base = declarative_base()
 
-class Deadth_stat(Base):
+class DeathStat(Base):
     __tablename__ = 'mortality_data'
     id = Column(Integer, primary_key=True)
     country = Column(String)
@@ -33,16 +33,16 @@ def search_mortality_data(
     limit: int = 10,
     offset: int = 0
 ) -> list:
-    query = select(Deadth_stat)
+    query = select(DeathStat)
 
     if country:
-        query = query.where(Deadth_stat.country.ilike(f"%{country}%"))
+        query = query.where(DeathStat.country.ilike(f"%{country}%"))
 
     if year:
-        query = query.where(Deadth_stat.year == str(year))
+        query = query.where(DeathStat.year == str(year))
 
     if cause:
-        query = query.where(Deadth_stat.cause.ilike(f"%{cause}%"))
+        query = query.where(DeathStat.cause.ilike(f"%{cause}%"))
 
     query = query.limit(limit).offset(offset)
     results = session.execute(query).scalars().all()
